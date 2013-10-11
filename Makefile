@@ -10,7 +10,7 @@ dist/setup: vhd-tool.obuild
 
 .PHONY: install
 install: build
-	install -D -m 755 dist/build/vhd-tool/vhd-tool ${BINDIR}/vhd-tool
+	install -D -m 755 dist/build/vhd-tool/vhd-tool ${LIBEXECDIR}/vhd-tool
 	install -D -m 755 dist/build/sparse_dd/sparse_dd ${LIBEXECDIR}/sparse_dd
 	install -D -m 644 src/sparse_dd.conf ${ETCDIR}/sparse_dd.conf
 
