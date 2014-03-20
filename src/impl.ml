@@ -15,6 +15,7 @@
 open Common
 open Cmdliner
 open Lwt
+open Stringext
 
 module Impl = Vhd.Make(Vhd_lwt)
 open Impl
@@ -519,13 +520,12 @@ let socket sockaddr =
   | Lwt_unix.ADDR_UNIX _ -> Unix.PF_UNIX in
   Lwt_unix.socket family Unix.SOCK_STREAM 0
 
-let colon = Re_str.regexp_string ":"
 
 let make_stream common source relative_to source_format destination_format =
   match source_format, destination_format with
   | "hybrid", "raw" ->
     (* expect source to be block_device:vhd *)
-    begin match Re_str.bounded_split colon source 2 with
+    begin match String.split ':' source with
     | [ raw; vhd ] ->
       let path = common.path @ [ Filename.dirname vhd ] in
       Vhd_IO.openfile ~path vhd false >>= fun t ->
@@ -597,7 +597,7 @@ let write_stream common s destination source_protocol destination_protocol preze
       let headers = match Uri.userinfo uri' with
         | None -> headers
         | Some x ->
-          begin match Re_str.bounded_split_delim (Re_str.regexp_string ":") x 2 with
+          begin match String.split ~limit:2 ':' x with
           | [ user; pass ] ->
             let b = Cohttp.Auth.(to_string (Basic (user, pass))) in
             Header.add headers "authorization" b
