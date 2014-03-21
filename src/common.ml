@@ -19,10 +19,10 @@ type t = {
   path: string list;
 }
 
-let colon = Re_str.regexp_string ":"
+open Stringext
 
 let make debug verb unbuffered path =
-  let path = Re_str.split colon path in
+  let path = String.split ':' path in
   { debug; verb; unbuffered; path }
 
 (* Keep this in sync with OCaml's Unix.file_descr *)
