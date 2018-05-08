@@ -63,6 +63,8 @@ let rec sendfile from_fd to_fd len =
             if remaining > 0L then begin
               _sendfile from_fd to_fd remaining
               >>= fun written ->
+              Lwt_unix.fdatasync to_fd
+              >>= fun () ->
               loop (Int64.sub remaining written)
             end else return () in
           loop len
