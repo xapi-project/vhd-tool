@@ -105,11 +105,7 @@ let of_seekable_fd fd =
     Lwt_unix.LargeFile.lseek fd n Unix.SEEK_CUR >>= fun offset ->
     c.offset := offset;
     return () in
-  let close () =
-    Lwt_unix.fdatasync fd >>= fun () ->
-    c.close ()
-  in
-  return { c with skip; close }
+  return { c with skip }
 
 let _ =
   Ssl.init ()
