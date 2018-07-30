@@ -23,7 +23,7 @@ external _sendfile: Unix.file_descr -> Unix.file_descr -> int64 -> int64 = "stub
 let _sendfile from_fd to_fd len =
   let from_fd = Lwt_unix.unix_file_descr from_fd in
   let to_fd = Lwt_unix.unix_file_descr to_fd in
-  let max_attempts = 20 in
+  let max_attempts = 200000 in
   let rec loop remaining_attempts =
     Lwt.catch
       (fun () -> detach (_sendfile from_fd to_fd) len)
